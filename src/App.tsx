@@ -2,17 +2,24 @@ import { useState } from "react";
 import ImageHeader from "./components/ImageHeader"
 
 
+type Item = {
+  title: string;
+  id: string;
+};
+
 const App = () => {
-  const [items, setItems] = useState<string[]>([]);
+  const [items, setItems] = useState<Item[]>([]);
   const [inputValue, setInputValue] = useState<string>("");
 
-  const handleSubmit = (event : React.FormEvent) => {
+  const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    setItems((prev) => [...prev, inputValue]);
+    setItems((prev) => [...prev, { title: inputValue, id: Date.now().toString() }]);
     setInputValue("");
   }
 
-
+  const handleDelete = (id: string) => {
+    setItems((prev) => prev.filter((data) => data.id !== id));
+  }
 
 
   return (
@@ -21,8 +28,8 @@ const App = () => {
 
       <div className="w-[350px]">
         <form className="mb-5" onSubmit={handleSubmit}>
-         
-    
+
+
           <input
             type="text"
             value={inputValue}
@@ -35,34 +42,34 @@ const App = () => {
           {
             items.map((data) => (
 
-      
 
-            < div key = {data} className="flex justify-between items-center border border-slate-600 pl-2 mb-2 mr-1 py-2">
-          <p>{data}</p>
-          <button type="button" aria-label="Delete task" className="mr-2 text-red-600">
-            <svg
-              aria-hidden="true"
-              className="h-5 w-5"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M6 7h12M9 7V4h6v3m-8 0 1 13h8l1-13M10 11v5m4-5v5"
-              />
-            </svg>
-          </button>
+
+              < div key={data.id} className="flex justify-between items-center border border-slate-600 pl-2 mb-2 mr-1 py-2">
+                <p>{data.title}</p>
+                <button onClick={() => handleDelete(data.id)} type="button" aria-label="Delete task" className="mr-2 text-red-600">
+                  <svg
+                    aria-hidden="true"
+                    className="h-5 w-5"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M6 7h12M9 7V4h6v3m-8 0 1 13h8l1-13M10 11v5m4-5v5"
+                    />
+                  </svg>
+                </button>
+              </div>
+            ))
+          }
+
         </div>
-          ))
-}
 
       </div>
 
-    </div>
-      
     </div >
   )
 }
